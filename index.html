@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Nav Durga Sports — Photo Catalog</title>
+
+<!-- ===== WhatsApp / Facebook / social preview card ===== -->
+<meta property="og:type" content="website">
+<meta property="og:title" content="Nav Durga Sports — Photo Catalog">
+<meta property="og:description" content="Shuttlecocks, Rackets, Balls & DASH X — tap to open the full photo catalog.">
+<meta property="og:image" content="https://vinitsharma6433-cpu.github.io/nds-catalog/og-image.jpg">
+<meta property="og:url" content="https://vinitsharma6433-cpu.github.io/nds-catalog/">
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Nav Durga Sports — Photo Catalog">
+<meta name="twitter:description" content="Shuttlecocks, Rackets, Balls & DASH X — tap to open the full photo catalog.">
+<meta name="twitter:image" content="https://vinitsharma6433-cpu.github.io/nds-catalog/og-image.jpg">
+
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#4a1220">
+<link rel="icon" href="icon-192.png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+
+<!-- Instant redirect to the full catalog app -->
+<meta http-equiv="refresh" content="0; url=catalog.html">
+<script>window.location.replace('catalog.html');</script>
+
+<style>
+  html,body{
+    margin:0; height:100%; background:#2a0a12;
+    display:flex; align-items:center; justify-content:center;
+    font-family:Georgia, serif; color:#f3e0a8;
+  }
+  .loading{ text-align:center; }
+  .spinner{
+    width:36px; height:36px; margin:0 auto 14px;
+    border:3px solid rgba(212,175,55,.25); border-top-color:#d4af37;
+    border-radius:50%; animation:spin 0.8s linear infinite;
+  }
+  @keyframes spin{ to{ transform:rotate(360deg); } }
+</style>
+</head>
+<body>
+  <div class="loading">
+    <div class="spinner"></div>
+    <div>Nav Durga Sports खुल रहा है...</div>
+    <noscript><p><a href="catalog.html" style="color:#d4af37;">यहां दबाएं / Tap here</a></p></noscript>
+  </div>
+</body>
+</html>

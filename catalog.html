@@ -241,6 +241,32 @@
     margin-top:16px; opacity:0; transition:opacity .6s ease .35s;
   }
   #controls.visible{ opacity:1; }
+  #scrubWrap{
+    width:100%; max-width:420px; margin:0 auto; opacity:0;
+    transition:opacity .6s ease .35s;
+  }
+  #scrubWrap.visible{ opacity:1; }
+  #scrubber{
+    -webkit-appearance:none; appearance:none; width:100%; height:20px;
+    background:transparent; margin:0; cursor:pointer;
+  }
+  #scrubber::-webkit-slider-runnable-track{
+    height:2px; background:linear-gradient(90deg, transparent, var(--gold-dim), transparent);
+    border-radius:2px;
+  }
+  #scrubber::-webkit-slider-thumb{
+    -webkit-appearance:none; appearance:none; width:16px; height:16px; margin-top:-7px;
+    border-radius:50%; background:var(--gold); border:2px solid var(--gold-light);
+    box-shadow:0 0 6px rgba(212,175,55,.6);
+  }
+  #scrubber::-moz-range-track{
+    height:2px; background:linear-gradient(90deg, transparent, var(--gold-dim), transparent);
+    border-radius:2px;
+  }
+  #scrubber::-moz-range-thumb{
+    width:16px; height:16px; border-radius:50%; background:var(--gold);
+    border:2px solid var(--gold-light); box-shadow:0 0 6px rgba(212,175,55,.6);
+  }
   #persistHint{
     margin-top:10px; text-align:center; color:var(--gold-dim); opacity:0;
     font-size:11.5px; font-family:Georgia, serif; letter-spacing:.02em;
@@ -368,6 +394,9 @@
       <div class="leaf" id="leaf"></div>
       <canvas id="confettiCanvas"></canvas>
     </div>
+    <div id="scrubWrap">
+      <input type="range" id="scrubber" min="0" max="0" value="0" step="1">
+    </div>
     <div id="controls">
       <div class="nav-btn" id="prevBtn">&#10094;</div>
       <div class="nav-btn" id="autoBtn" title="Auto Play">&#9654;</div>
@@ -422,6 +451,8 @@ const stage = document.getElementById('stage');
 const pageCounter = document.getElementById('pageCounter');
 const prevBtn = document.getElementById('prevBtn');
 const nextBtn = document.getElementById('nextBtn');
+const scrubber = document.getElementById('scrubber');
+scrubber.max = PAGES.length - 1;
 
 /* ===================== AUDIO: ambient music + firecracker pop ===================== */
 let audioCtx = null;
@@ -720,7 +751,18 @@ function updateUI(){
   pageCounter.textContent = (current+1) + ' / ' + PAGES.length;
   prevBtn.classList.toggle('disabled', current===0);
   nextBtn.classList.toggle('disabled', current===PAGES.length-1);
+  scrubber.value = current;
 }
+
+// scrubber — drag the dot to any point on the line, it jumps there instantly
+scrubber.addEventListener('input', ()=>{
+  if(isAuto) stopAuto();
+  animating = false;
+  leaf.style.transition = 'none';
+  leaf.style.transform = 'rotateY(0deg) scale(1)';
+  current = parseInt(scrubber.value, 10);
+  renderCurrent();
+});
 
 function flip(newIndex, dir){
   if(animating) return;
@@ -871,6 +913,7 @@ document.getElementById('openBtn').addEventListener('click', ()=>{
   cover.classList.add('opening');
   renderCurrent();
   document.getElementById('stageWrap').classList.add('visible');
+  document.getElementById('scrubWrap').classList.add('visible');
   document.getElementById('controls').classList.add('visible');
   document.getElementById('persistHint').classList.add('visible');
   setTimeout(()=>{ cover.style.display='none'; initConfetti(); }, 1150);

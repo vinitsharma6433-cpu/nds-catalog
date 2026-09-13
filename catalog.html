@@ -804,17 +804,45 @@ document.addEventListener('keydown', (e)=>{
   if(e.key === 'Escape') closeLightbox();
 });
 
-// touch swipe
+// touch swipe — live drag-follow (photo turns with your finger)
 let touchStartX = null;
-stage.addEventListener('touchstart', (e)=>{ touchStartX = e.touches[0].clientX; }, {passive:true});
-stage.addEventListener('touchend', (e)=>{
-  if(touchStartX===null) return;
-  const dx = e.changedTouches[0].clientX - touchStartX;
-  if(Math.abs(dx) > 44){
-    stopAuto();
-    if(dx < 0) next(); else prev();
+let dragDX = 0;
+let dragging = false;
+
+stage.addEventListener('touchstart', (e)=>{
+  if(animating) return;
+  touchStartX = e.touches[0].clientX;
+  dragging = true;
+  dragDX = 0;
+  leaf.style.transition = 'none';
+}, {passive:true});
+
+stage.addEventListener('touchmove', (e)=>{
+  if(!dragging || touchStartX===null) return;
+  dragDX = e.touches[0].clientX - touchStartX;
+  // resist dragging past the first/last page
+  if((current===0 && dragDX>0) || (current===PAGES.length-1 && dragDX<0)){
+    dragDX *= 0.35;
   }
+  const rect = stage.getBoundingClientRect();
+  const deg = Math.max(-80, Math.min(80, (dragDX/rect.width) * 100));
+  leaf.style.transform = `rotateY(${deg}deg) scale(.98)`;
+}, {passive:true});
+
+stage.addEventListener('touchend', ()=>{
+  if(!dragging) return;
+  dragging = false;
   touchStartX = null;
+  const rect = stage.getBoundingClientRect();
+  const threshold = rect.width * 0.15;
+  if(Math.abs(dragDX) > threshold){
+    stopAuto();
+    if(dragDX < 0) next(); else prev();
+  } else {
+    leaf.style.transition = 'transform .18s cubic-bezier(.4,0,.2,1)';
+    leaf.style.transform = 'rotateY(0deg) scale(1)';
+  }
+  dragDX = 0;
 }, {passive:true});
 
 // lightbox
